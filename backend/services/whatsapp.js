@@ -3,13 +3,11 @@ const qrcode = require("qrcode");
 
 const client = new Client({
     authStrategy: new LocalAuth({
-        clientId:"whatsapp-bot"
+        clientId: "whatsapp-bot"
     }),
     puppeteer: {
-        headless:true,
-        executablePath:
-        process.env.CHROME_PATH,
-        args:[
+        headless: true,
+        args: [
             "--no-sandbox",
             "--disable-setuid-sandbox",
             "--disable-dev-shm-usage",
