@@ -1,20 +1,25 @@
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode");
-
+const { executablePath } = require("puppeteer");
 
 const client = new Client({
 
     authStrategy: new LocalAuth({
-        clientId: "whatsapp-bot"
+        clientId:"whatsapp-bot"
     }),
 
     puppeteer: {
-        headless: true,
-        args: [
+
+        headless:true,
+
+        executablePath: executablePath(),
+
+        args:[
             "--no-sandbox",
             "--disable-setuid-sandbox",
             "--disable-dev-shm-usage"
         ]
+
     }
 
 });
