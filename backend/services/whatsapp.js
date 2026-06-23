@@ -12,7 +12,8 @@ const client = new Client({
         headless: true,
         args: [
             "--no-sandbox",
-            "--disable-setuid-sandbox"
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage"
         ]
     }
 
@@ -82,7 +83,7 @@ client.on("disconnected", (reason) => {
 
 
 // create your own function
-const sendMessage = async(number,message)=>{
+const sendMessage = async (number, message) => {
 
     await client.sendMessage(
         number,
