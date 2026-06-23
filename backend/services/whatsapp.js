@@ -1,20 +1,21 @@
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode");
-const { executablePath } = require("puppeteer");
+const puppeteer = require("puppeteer");
+
 
 const client = new Client({
 
     authStrategy: new LocalAuth({
-        clientId:"whatsapp-bot"
+        clientId: "whatsapp-bot"
     }),
 
     puppeteer: {
 
-        headless:true,
+        headless: true,
 
-        executablePath: executablePath(),
+        executablePath: puppeteer.executablePath(),
 
-        args:[
+        args: [
             "--no-sandbox",
             "--disable-setuid-sandbox",
             "--disable-dev-shm-usage"
@@ -25,59 +26,61 @@ const client = new Client({
 });
 
 
-// QR Code
-// client.on("qr", async (qr) => {
-//     const qrImage = await qrcode.toDataURL(qr);
-//     console.log("Scan QR Code");
-//     console.log(qrImage);
-// });
-
-// client.on("qr", async (qr) => {
-//     const qrImage =
-//         await qrcode.toDataURL(qr);
-//     global.io.emit(
-//         "whatsapp-qr",
-//         qrImage
-//     );
-// });
+// QR Generate
 client.on("qr", async (qr) => {
 
     const qrImage = await qrcode.toDataURL(qr);
 
     console.log("QR Generated");
 
+
     if (global.io) {
+
         global.io.emit(
             "whatsapp-qr",
             qrImage
         );
+
     }
 
 });
 
+
 // Connected
-// client.on("ready", () => {
-//     console.log("WhatsApp Connected ✅");
-// });
 client.on("ready", () => {
-    global.io.emit(
-        "whatsapp-status",
-        {
-            status: "CONNECTED"
-        }
+
+
+    console.log(
+        "WhatsApp Connected ✅"
     );
+
+
+    if (global.io) {
+
+        global.io.emit(
+            "whatsapp-status",
+            {
+                status:"CONNECTED"
+            }
+        );
+
+    }
+
 });
 
-// Authentication
+
+// Authenticated
 client.on("authenticated", () => {
 
-    console.log("WhatsApp Authenticated");
+    console.log(
+        "WhatsApp Authenticated"
+    );
 
 });
 
 
 // Disconnected
-client.on("disconnected", (reason) => {
+client.on("disconnected", (reason)=>{
 
     console.log(
         "WhatsApp Disconnected",
@@ -87,21 +90,45 @@ client.on("disconnected", (reason) => {
 });
 
 
-// create your own function
-const sendMessage = async (number, message) => {
 
-    await client.sendMessage(
-        number,
-        message
-    );
+// Send Message Function
+const sendMessage = async(number,message)=>{
+
+    try {
+
+
+        await client.sendMessage(
+            `${number}@c.us`,
+            message
+        );
+
+
+        console.log(
+            "Message Sent",
+            number
+        );
+
+
+    } catch(error){
+
+        console.log(
+            "Send Message Error",
+            error.message
+        );
+
+    }
 
 };
+
 
 
 client.initialize();
 
 
+
 module.exports = {
-    sendMessage,
-    client
+
+    client,
+    sendMessage
+
 };
