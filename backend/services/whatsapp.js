@@ -1,15 +1,21 @@
 const QRCode = require("qrcode");
 const { Client, LocalAuth } = require("whatsapp-web.js");
 
+
 const client = new Client({
+
     authStrategy: new LocalAuth({
-        dataPath: ".auth"
+        clientId: "render-whatsapp",
+        dataPath: "./whatsapp-session"
     }),
+
 
     restartOnAuthFail: true,
 
+
     puppeteer: {
         headless: true,
+
         args: [
             "--no-sandbox",
             "--disable-setuid-sandbox",
@@ -18,25 +24,34 @@ const client = new Client({
             "--single-process"
         ]
     }
+
 });
+
 
 
 client.on("qr", async (qr) => {
 
     console.log("QR Generated");
 
-    // Convert QR to image
+
     const qrImage = await QRCode.toDataURL(qr);
 
 
     if (global.io) {
+
         global.io.emit(
             "whatsapp-qr",
             qrImage
         );
+
+        console.log(
+            "QR Sent to frontend"
+        );
+
     }
 
 });
+
 
 
 client.on("ready", () => {
@@ -46,6 +61,7 @@ client.on("ready", () => {
     );
 
 });
+
 
 
 client.on("auth_failure", (msg) => {
@@ -58,6 +74,7 @@ client.on("auth_failure", (msg) => {
 });
 
 
+
 client.on("disconnected", (reason) => {
 
     console.log(
@@ -66,6 +83,7 @@ client.on("disconnected", (reason) => {
     );
 
 });
+
 
 
 const sendMessage = async (number, message) => {
@@ -77,11 +95,13 @@ const sendMessage = async (number, message) => {
             message
         );
 
+
         console.log(
             "Message sent"
         );
 
-    } catch (error) {
+
+    } catch(error) {
 
         console.log(
             "Send message error:",
@@ -93,7 +113,9 @@ const sendMessage = async (number, message) => {
 };
 
 
+
 client.initialize();
+
 
 
 module.exports = {
