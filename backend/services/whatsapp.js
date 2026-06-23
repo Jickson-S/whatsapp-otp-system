@@ -1,9 +1,13 @@
-const qrcode = require("qrcode-terminal");
+const QRCode = require("qrcode");
 const { Client, LocalAuth } = require("whatsapp-web.js");
-const qrImage = await QRCode.toDataURL(qr);
+
 const client = new Client({
-    authStrategy: new LocalAuth({ dataPath: ".auth" }),
+    authStrategy: new LocalAuth({
+        dataPath: ".auth"
+    }),
+
     restartOnAuthFail: true,
+
     puppeteer: {
         headless: true,
         args: [
@@ -16,25 +20,81 @@ const client = new Client({
     }
 });
 
-client.on("qr", (qr) => {
-    qrcode.generate(qr, { small: true });
+
+client.on("qr", async (qr) => {
 
     console.log("QR Generated");
 
+    // Convert QR to image
+    const qrImage = await QRCode.toDataURL(qr);
+
+
     if (global.io) {
-        global.io.emit("whatsapp-qr", qr);
+        global.io.emit(
+            "whatsapp-qr",
+            qrImage
+        );
     }
+
 });
+
 
 client.on("ready", () => {
-    console.log("WhatsApp Connected ✅");
+
+    console.log(
+        "WhatsApp Connected ✅"
+    );
+
 });
 
+
+client.on("auth_failure", (msg) => {
+
+    console.log(
+        "Authentication failed:",
+        msg
+    );
+
+});
+
+
+client.on("disconnected", (reason) => {
+
+    console.log(
+        "WhatsApp Disconnected:",
+        reason
+    );
+
+});
+
+
 const sendMessage = async (number, message) => {
-    await client.sendMessage(`${number}@c.us`, message);
+
+    try {
+
+        await client.sendMessage(
+            `${number}@c.us`,
+            message
+        );
+
+        console.log(
+            "Message sent"
+        );
+
+    } catch (error) {
+
+        console.log(
+            "Send message error:",
+            error.message
+        );
+
+    }
+
 };
 
+
 client.initialize();
+
 
 module.exports = {
     client,
