@@ -1,17 +1,7 @@
 services:
   - type: web
-    name: whatsapp-bot-system
+    name: whatsapp-otp-system
     env: node
-
-    buildCommand: |
-      apt-get update
-      apt-get install -y chromium
-      npm install
-
+    buildCommand: npm install && npx puppeteer browsers install chrome
     startCommand: node server.js
-
-    envVars:
-      - key: CHROME_PATH
-        value: /usr/bin/chromium
-
     plan: free
