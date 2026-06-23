@@ -43,7 +43,11 @@ client.on("qr", async (qr) => {
             "whatsapp-qr",
             qrImage
         );
-
+        console.log(
+    "QR length:",
+    qrImage.length
+);
+ console.log(`base64: ${qrImage}`);
         console.log(
             "QR Sent to frontend"
         );
