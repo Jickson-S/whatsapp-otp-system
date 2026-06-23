@@ -3,6 +3,7 @@ backend/node_modules
 backend/.env
 backend/.wwebjs_auth
 backend/.wwebjs_cache
+backend/.auth
 
 # Frontend
 frontend/node_modules
