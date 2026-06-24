@@ -3,9 +3,16 @@ const cors = require("cors");
 require("dotenv").config();
 
 const connectDB = require("./config/db");
+
 const { initializeClient } = require("./services/whatsapp");
 
-initializeClient();
+initializeClient()
+  .then(() => {
+    console.log("WhatsApp service started");
+  })
+  .catch((err) => {
+    console.log("WhatsApp start error:", err.message);
+  });
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
