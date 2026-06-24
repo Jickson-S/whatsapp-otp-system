@@ -4,6 +4,8 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 let client = null;
 let lastQR = null;
 
+const sessionPath =process.env.WHATSAPP_SESSION_PATH ||"./whatsapp-session";
+
 // Create WhatsApp Client
 function createClient() {
   const whatsappClient = new Client({
@@ -11,10 +13,7 @@ function createClient() {
       clientId: "render-whatsapp",
       // Render Persistent Disk
       // Use "./whatsapp-session" locally
-      dataPath:
-        process.env.NODE_ENV === "production"
-          ? "/data/whatsapp-session"
-          : "./whatsapp-session",
+      dataPath: sessionPath
     }),
     restartOnAuthFail: true,
     puppeteer: {
