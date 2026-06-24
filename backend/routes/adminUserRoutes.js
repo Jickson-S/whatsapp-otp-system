@@ -1,48 +1,20 @@
-const express=require("express");
+const express = require("express");
 
-const router=express.Router();
-
+const router = express.Router();
 
 const {
+  getUsers,
+  getUser,
+  deleteUser,
+  blockUser,
+} = require("../controllers/adminUserController");
 
-getUsers,
+router.get("/users", getUsers);
 
-getUser,
+router.get("/users/:id", getUser);
 
-deleteUser,
+router.delete("/users/:id", deleteUser);
 
-blockUser
+router.put("/users/block/:id", blockUser);
 
-}=require("../controllers/adminUserController");
-
-
-
-router.get(
-"/users",
-getUsers
-);
-
-
-
-router.get(
-"/users/:id",
-getUser
-);
-
-
-
-router.delete(
-"/users/:id",
-deleteUser
-);
-
-
-
-router.put(
-"/users/block/:id",
-blockUser
-);
-
-
-
-module.exports=router;
+module.exports = router;
